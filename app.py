@@ -3,8 +3,9 @@
 # =========================
 import matplotlib
 matplotlib.use("Agg")
-
 import os
+os.environ["FASTF1_DISABLE_TIMING_PATCH"] = "1"
+
 import sys
 import numpy as np
 import pandas as pd
@@ -630,8 +631,19 @@ col1, col2 = st.columns(2)
 # ---- Speed plot ----
 with col1:
     fig, ax = plt.subplots(figsize=(6, 4))
-    ax.plot(car_1["Distance"], car_1["Speed"], label=driver_1_name, color=color_1)
-    ax.plot(car_2["Distance"], car_2["Speed"], label=driver_2_name, color=color_2)
+    ax.plot(
+      car_1["Distance"].to_numpy(),
+      car_1["Speed"].to_numpy(),
+      label=driver_1_name,
+      color=color_1
+    )
+    ax.plot(
+      car_2["Distance"].to_numpy(),
+      car_2["Speed"].to_numpy(),
+      label=driver_2_name,
+      color=color_2
+    )
+
     ax.set_xlabel("Distance (m)")
     ax.set_ylabel("Speed (km/h)")
     ax.legend()
@@ -642,8 +654,19 @@ with col1:
 # ---- Throttle plot ----
 with col2:
     fig, ax = plt.subplots(figsize=(6, 4))
-    ax.plot(car_1["Distance"], car_1["Throttle"], label=driver_1_name, color=color_1)
-    ax.plot(car_2["Distance"], car_2["Throttle"], label=driver_2_name, color=color_2)
+    ax.plot(
+      car_1["Distance"].to_numpy(),
+      car_1["Throttle"].to_numpy(),
+      label=driver_1_name,
+      color=color_1
+    )
+    ax.plot(
+      car_2["Distance"].to_numpy(),
+      car_2["Throttle"].to_numpy(),
+      label=driver_2_name,
+      color=color_2
+    )
+
     ax.set_xlabel("Distance (m)")
     ax.set_ylabel("Throttle (%)")
     ax.legend()
@@ -654,7 +677,13 @@ with col2:
 # ---- Delta plot ----
 st.subheader("⏱️ Delta Time Analysis")
 fig, ax = plt.subplots(figsize=(10, 4))
-ax.plot(dist, delta, color="purple")
+ax.plot(
+    dist,
+    delta,
+    color="purple"
+)
+
+
 ax.axhline(0, linestyle="--")
 ax.set_xlabel("Distance (m)")
 ax.set_ylabel("Delta Time (s)")
@@ -736,8 +765,8 @@ fig, ax = plt.subplots(figsize=(7, 7))
 
 # --- Racing line (outlined for broadcast look) ---
 ax.plot(
-    pos_1["X"],
-    pos_1["Y"],
+    pos_1["X"].to_numpy(),
+    pos_1["Y"].to_numpy(),
     color="black",
     linewidth=4.5,
     alpha=0.85,
@@ -745,8 +774,8 @@ ax.plot(
 )
 
 ax.plot(
-    pos_1["X"],
-    pos_1["Y"],
+    pos_1["X"].to_numpy(),
+    pos_1["Y"].to_numpy(),
     color=color_1,
     linewidth=3,
     zorder=2,
@@ -754,14 +783,15 @@ ax.plot(
 )
 
 ax.plot(
-    pos_2["X"],
-    pos_2["Y"],
+    pos_2["X"].to_numpy(),
+    pos_2["Y"].to_numpy(),
     color=color_2,
     linestyle="--",
     linewidth=2.5,
     zorder=2,
     label=driver_2_name
 )
+
 
 # --- Corner markers ---
 TURN_SIZE = 260  # fixed size for clean look
@@ -772,8 +802,9 @@ for i, corner in enumerate(corner_data):
         if idx >= len(pos_1):
             continue
 
-        x = pos_1.iloc[idx]["X"]
-        y = pos_1.iloc[idx]["Y"]
+        x = float(pos_1.iloc[idx]["X"])
+        y = float(pos_1.iloc[idx]["Y"])
+
 
         delta_change = corner["Delta Change (s)"]
 
