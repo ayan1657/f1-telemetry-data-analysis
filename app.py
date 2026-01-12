@@ -632,17 +632,19 @@ col1, col2 = st.columns(2)
 with col1:
     fig, ax = plt.subplots(figsize=(6, 4))
     ax.plot(
-      car_1["Distance"].to_numpy(),
-      car_1["Speed"].to_numpy(),
+      np.asarray(car_1["Distance"], dtype=float),
+      np.asarray(car_1["Speed"], dtype=float),
       label=driver_1_name,
       color=color_1
     )
+
     ax.plot(
-      car_2["Distance"].to_numpy(),
-      car_2["Speed"].to_numpy(),
+      np.asarray(car_2["Distance"], dtype=float),
+      np.asarray(car_2["Speed"], dtype=float),
       label=driver_2_name,
       color=color_2
-    )
+    ) 
+
 
     ax.set_xlabel("Distance (m)")
     ax.set_ylabel("Speed (km/h)")
@@ -655,17 +657,20 @@ with col1:
 with col2:
     fig, ax = plt.subplots(figsize=(6, 4))
     ax.plot(
-      car_1["Distance"].to_numpy(),
-      car_1["Throttle"].to_numpy(),
+      np.asarray(car_1["Distance"], dtype=float),
+      np.asarray(car_1["Throttle"], dtype=float),
       label=driver_1_name,
       color=color_1
     )
+
     ax.plot(
-      car_2["Distance"].to_numpy(),
-      car_2["Throttle"].to_numpy(),
+      np.asarray(car_2["Distance"], dtype=float),
+       np.asarray(car_2["Throttle"], dtype=float),
       label=driver_2_name,
       color=color_2
     )
+
+
 
     ax.set_xlabel("Distance (m)")
     ax.set_ylabel("Throttle (%)")
@@ -677,14 +682,13 @@ with col2:
 # ---- Delta plot ----
 st.subheader("⏱️ Delta Time Analysis")
 fig, ax = plt.subplots(figsize=(10, 4))
-ax.plot(
-    dist,
-    delta,
-    color="purple"
-)
 
+dist = np.asarray(dist, dtype=float)
+delta = np.asarray(delta, dtype=float)
 
+ax.plot(dist, delta, color="purple")
 ax.axhline(0, linestyle="--")
+
 ax.set_xlabel("Distance (m)")
 ax.set_ylabel("Delta Time (s)")
 ax.set_title(f"{driver_2_name} relative to {driver_1_name}")
