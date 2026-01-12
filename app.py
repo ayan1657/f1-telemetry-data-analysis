@@ -12,6 +12,7 @@ import fastf1.plotting
 
 fastf1.plotting.setup_mpl()
 
+
 TEAM_COLORS = {
     "Red Bull Racing": "#1E41FF",
     "Ferrari": "#DC0000",
@@ -268,7 +269,6 @@ def get_races_for_year(year):
     schedule = fastf1.get_event_schedule(year)
     return schedule["EventName"].tolist()
 
-@st.cache_data(show_spinner=True)
 def load_data(year, race, session_type):
     session = load_session(year, race, session_type)
     laps = session.laps
@@ -306,8 +306,10 @@ race = st.sidebar.selectbox("Race", races)
 
 session_type = st.sidebar.selectbox(
     "Session",
-    ["R", "Q", "FP1", "FP2", "FP3"]
+    ["FP1", "FP2", "FP3", "Q", "R"],
+    index=3  # ✅ Default = Qualifying (safer than Race)
 )
+
 
 # =========================
 # Load session + laps
@@ -441,27 +443,42 @@ stints_2 = extract_tyre_stints(strategy_laps_2)
 # =========================
 # Telemetry processing
 # =========================
-try:
+st.sidebar.markdown("---")
+load_telemetry = st.sidebar.button("🚀 Load Telemetry & Compare")
 
-    # get_telemetry RETURNS (car, pos)
-    car_1, pos_1 = get_telemetry(lap_1)
-    car_2, pos_2 = get_telemetry(lap_2)
-
-    team_1 = driver_meta[driver_1]["team"]
-    team_2 = driver_meta[driver_2]["team"]
-
-    color_1 = TEAM_COLORS.get(team_1, "#FFFFFF")
-    color_2 = TEAM_COLORS.get(team_2, "#AAAAAA")
+if load_telemetry:
+    try:
+        # get_telemetry RETURNS (car, pos)
+        
+        car_1, pos_1 = get_telemetry(lap_1)
+        car_2, pos_2 = get_telemetry(lap_2)
 
 
-    # Delta time uses CAR telemetry ONLY
-    dist, delta = compute_delta_time(car_1, car_2)
-    sector_deltas = compute_sector_deltas(dist, delta)
+        team_1 = driver_meta[driver_1]["team"]
+        team_2 = driver_meta[driver_2]["team"]
 
+        color_1 = TEAM_COLORS.get(team_1, "#FFFFFF")
+        color_2 = TEAM_COLORS.get(team_2, "#AAAAAA")
 
-except Exception as e:
-    st.error(f"Error loading telemetry: {e}")
+        # Delta time uses CAR telemetry ONLY
+        dist, delta = compute_delta_time(car_1, car_2)
+        sector_deltas = compute_sector_deltas(dist, delta)
+
+    except Exception as e:
+     st.error(
+        "Telemetry could not be loaded for this selection.\n\n"
+        "👉 Try:\n"
+        "- Switching to Qualifying (Q)\n"
+        "- Choosing a different lap\n"
+        "- Reloading once\n\n"
+        f"Error: {str(e)}"
+    )
+     st.stop()
+
+else:
+    st.info("👈 Select laps and click **Load Telemetry & Compare**")
     st.stop()
+
 
 corner_data = []
 
@@ -549,16 +566,7 @@ st.info(
 
 fig, ax = plt.subplots(figsize=(10, 3))
 
-def plot_strategy(stints, y):
-    for stint in stints:
-        ax.barh(
-            y,
-            stint["End"] - stint["Start"] + 1,
-            left=stint["Start"],
-            color=tyre_color(stint["Compound"]),
-            edgecolor="black",
-            height=0.35
-        )
+
 
 def plot_strategy(stints, y):
     for stint in stints:

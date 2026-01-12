@@ -1,20 +1,21 @@
 def get_telemetry(lap):
     """
-    Returns:
-    car_data : DataFrame with Speed, Throttle, Brake, Distance
-    pos_data : DataFrame with X, Y
+    Safe telemetry loader for Streamlit + FastF1
+    Works across FastF1 versions
     """
 
-    # ✅ Correct FastF1 usage (NO telemetry kwarg)
-    car_data = lap.get_car_data()
-    car_data = car_data.add_distance()
+    session = lap.session
 
+    # ✅ Always ensure telemetry is loaded (safe to call multiple times)
+    session.load(telemetry=True, weather=False, messages=False)
+
+    car_data = lap.get_car_data().add_distance()
     pos_data = lap.get_pos_data()
 
-    # 🔒 Validate required channels
-    if 'Speed' not in car_data.columns or 'Distance' not in car_data.columns:
+    if car_data.empty or "Speed" not in car_data.columns:
         raise RuntimeError(
-            f"Telemetry missing required columns. Found: {list(car_data.columns)}"
+            "Telemetry data not available for this lap. "
+            "Try Qualifying (Q) or a different lap."
         )
 
     return car_data, pos_data
