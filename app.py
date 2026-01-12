@@ -4,8 +4,10 @@
 import matplotlib
 matplotlib.use("Agg")
 
-import matplotlib.units as munits
-munits.registry.clear()
+import matplotlib as mpl
+mpl.rcParams["axes.formatter.useoffset"] = False
+mpl.rcParams["axes.formatter.use_mathtext"] = False
+
 
 import os
 
@@ -659,7 +661,9 @@ col1, col2 = st.columns(2)
 
 # ---- Speed plot ----
 with col1:
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig = plt.figure(figsize=(10, 3))
+    ax = fig.add_subplot(111)
+
     ax.plot(
       np.asarray(car_1["Distance"], dtype=float),
       np.asarray(car_1["Speed"], dtype=float),
@@ -684,7 +688,9 @@ with col1:
 
 # ---- Throttle plot ----
 with col2:
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig = plt.figure(figsize=(10, 3))
+    ax = fig.add_subplot(111)
+
     ax.plot(
       np.asarray(car_1["Distance"], dtype=float),
       np.asarray(car_1["Throttle"], dtype=float),
@@ -710,7 +716,9 @@ with col2:
 
 # ---- Delta plot ----
 st.subheader("⏱️ Delta Time Analysis")
-fig, ax = plt.subplots(figsize=(10, 4))
+fig = plt.figure(figsize=(10, 3))
+ax = fig.add_subplot(111)
+
 
 dist = np.asarray(dist, dtype=float)
 delta = np.asarray(delta, dtype=float)
@@ -794,7 +802,9 @@ else:
 # =========================
 st.subheader("🗺️ Track Map Overlay (Corner Analysis)")
 
-fig, ax = plt.subplots(figsize=(7, 7))
+fig = plt.figure(figsize=(10, 3))
+ax = fig.add_subplot(111)
+
 
 # --- Racing line (outlined for broadcast look) ---
 ax.plot(
