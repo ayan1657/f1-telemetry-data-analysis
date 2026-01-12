@@ -321,8 +321,16 @@ session_type = st.sidebar.selectbox(
 # =========================
 # Load session + laps
 # =========================
-with st.spinner("Loading session data..."):
-    session, valid_laps = load_data(year, race, session_type)
+status = st.empty()
+
+status.info("📥 Initializing FastF1 session data… This may take up to a minute.")
+session, valid_laps = load_data(year, race, session_type)
+
+status.info("📊 Processing lap and driver data…")
+driver_meta = get_driver_metadata(session)
+
+status.empty()
+
 
 driver_meta = get_driver_metadata(session)
 
@@ -445,35 +453,46 @@ stints_2 = extract_tyre_stints(strategy_laps_2)
 
 
 
+# =========================
+# Driver colors (GLOBAL SCOPE)
+# =========================
+team_1 = driver_meta[driver_1]["team"]
+team_2 = driver_meta[driver_2]["team"]
+
+color_1 = TEAM_COLORS.get(team_1, "#FFFFFF")
+color_2 = TEAM_COLORS.get(team_2, "#AAAAAA")
 
 
 # =========================
 # Telemetry processing
 # =========================
 st.sidebar.markdown("---")
-load_telemetry = st.sidebar.button("🚀 Load Telemetry & Compare")
+load_telemetry = st.sidebar.button("🚀Compare")
 
 if load_telemetry:
+    status = st.empty()  # 👈 progress-style text placeholder
+
     try:
-        # get_telemetry RETURNS (car, pos)
-        
+        # -------------------------
+        # Telemetry download
+        # -------------------------
+        status.info("📡 Downloading telemetry data for selected laps…")
         car_1, pos_1 = get_telemetry(lap_1)
         car_2, pos_2 = get_telemetry(lap_2)
 
 
-        team_1 = driver_meta[driver_1]["team"]
-        team_2 = driver_meta[driver_2]["team"]
-
-        color_1 = TEAM_COLORS.get(team_1, "#FFFFFF")
-        color_2 = TEAM_COLORS.get(team_2, "#AAAAAA")
-
-        # Delta time uses CAR telemetry ONLY
+        # -------------------------
+        # Delta computation
+        # -------------------------
+        status.info("⏱️ Computing delta time and sector analysis…")
         dist, delta = compute_delta_time(car_1, car_2)
         sector_deltas = compute_sector_deltas(dist, delta)
 
-        # =========================
-        # 🔧 FIX: FORCE NUMERIC AXES (CRITICAL)
-        # =========================
+        # -------------------------
+        # Numeric safety conversion
+        # -------------------------
+        status.info("🔧 Preparing telemetry for visualization…")
+
         dist = np.asarray(dist, dtype=float)
         delta = np.asarray(delta, dtype=float)
 
@@ -491,24 +510,24 @@ if load_telemetry:
         pos_2["X"] = np.asarray(pos_2["X"], dtype=float)
         pos_2["Y"] = np.asarray(pos_2["Y"], dtype=float)
 
-
-        
-
+        status.empty()  # ✅ clear message when done
 
     except Exception as e:
-     st.error(
-        "Telemetry could not be loaded for this selection.\n\n"
-        "👉 Try:\n"
-        "- Switching to Qualifying (Q)\n"
-        "- Choosing a different lap\n"
-        "- Reloading once\n\n"
-        f"Error: {str(e)}"
-    )
-     st.stop()
+        status.empty()
+        st.error(
+            "Telemetry could not be loaded for this selection.\n\n"
+            "👉 Try:\n"
+            "- Switching to Qualifying (Q)\n"
+            "- Choosing a different lap\n"
+            "- Reloading once\n\n"
+            f"Error: {str(e)}"
+        )
+        st.stop()
 
 else:
-    st.info("👈 Select laps and click **Load Telemetry & Compare**")
+    st.info("👈 Data Loaded Successfully, Click on **🚀Compare** Button")
     st.stop()
+
 
 
 corner_data = []
@@ -584,19 +603,29 @@ with c2:
 
 
 
-st.subheader("📈 Race Strategy Comparison")
-st.info(
-    "ℹ️ **Why are some laps missing in the strategy timeline?**\n\n"
-    "Gaps in the timeline represent **pit stop phases**. "
-    "Laps where a driver **enters or exits the pit lane** are excluded, "
-    "as tyre compound data is not valid during those laps.\n\n"
-    "This ensures the strategy view reflects **only full racing laps**, "
-    "similar to official Formula 1 broadcast graphics."
-)
+# =========================
+# Dynamic section title
+# =========================
+if session_type == "R":
+    strategy_title = "📈 Race Strategy Comparison"
+else:
+    strategy_title = "🛞 Tyre Usage Overview"
+
+st.subheader(strategy_title)
+
+if session_type != "R":
+    st.info(
+        "ℹ️ In non-race sessions (Qualifying / Practice), drivers usually run "
+        "**only one tyre compound**.\n\n"
+        "This view shows tyre usage, not pit-stop strategy."
+    )
+
 
 
 fig = plt.figure(figsize=(10, 3))
 ax = fig.add_subplot(111)
+
+
 
 
 
@@ -632,6 +661,16 @@ ax.grid(axis="x", linestyle="--", alpha=0.3)
 
 st.pyplot(fig)
 plt.close(fig)
+
+if session_type == "R":
+    st.info(
+        "ℹ️ **Why are some laps missing in the strategy timeline?**\n\n"
+        "Gaps in the timeline represent **pit stop phases**. "
+        "Laps where a driver **enters or exits the pit lane** are excluded, "
+        "as tyre compound data is not valid during those laps.\n\n"
+        "This ensures the strategy view reflects **only full racing laps**, "
+        "similar to official Formula 1 broadcast graphics."
+    )
 
 
 
