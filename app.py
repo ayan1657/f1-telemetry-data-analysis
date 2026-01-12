@@ -1,6 +1,9 @@
 # =========================
 # Imports
 # =========================
+import matplotlib
+matplotlib.use("Agg")
+
 import os
 import sys
 import numpy as np
@@ -8,9 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 import fastf1
-import fastf1.plotting
 
-fastf1.plotting.setup_mpl()
 
 
 TEAM_COLORS = {
@@ -572,12 +573,13 @@ def plot_strategy(stints, y):
     for stint in stints:
         ax.barh(
             y,
-            stint["length"],
-            left=stint["start_lap"],
+            int(stint["length"]),
+            left=int(stint["start_lap"]),
             color=tyre_color(stint["compound"]),
             edgecolor="black",
             height=0.35
-        )
+)
+
 
 plot_strategy(stints_1, y=1)
 plot_strategy(stints_2, y=0)
@@ -590,6 +592,8 @@ ax.set_title("Tyre Strategy Timeline")
 ax.grid(axis="x", linestyle="--", alpha=0.3)
 
 st.pyplot(fig)
+plt.close(fig)
+
 
 
 st.subheader("🛞 Tyre Usage Overview")
@@ -632,6 +636,8 @@ with col1:
     ax.set_ylabel("Speed (km/h)")
     ax.legend()
     st.pyplot(fig)
+    plt.close(fig)
+
 
 # ---- Throttle plot ----
 with col2:
@@ -642,6 +648,8 @@ with col2:
     ax.set_ylabel("Throttle (%)")
     ax.legend()
     st.pyplot(fig)
+    plt.close(fig)
+
 
 # ---- Delta plot ----
 st.subheader("⏱️ Delta Time Analysis")
@@ -652,6 +660,8 @@ ax.set_xlabel("Distance (m)")
 ax.set_ylabel("Delta Time (s)")
 ax.set_title(f"{driver_2_name} relative to {driver_1_name}")
 st.pyplot(fig)
+plt.close(fig)
+
 
 st.subheader("🧩 Sector-wise Delta Analysis")
 
@@ -823,6 +833,8 @@ ax.axis("off")
 ax.set_title(f"{race} – Racing Line & Corner Delta", fontsize=13)
 
 st.pyplot(fig)
+plt.close(fig)
+
 
 
 # =========================
