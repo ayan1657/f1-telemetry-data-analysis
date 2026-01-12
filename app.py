@@ -1,6 +1,9 @@
 # =========================
 # Imports
 # =========================
+import os
+os.environ["FASTF1_DISABLE_TIMING_PATCH"] = "1"
+
 import matplotlib
 matplotlib.use("Agg")
 
@@ -9,7 +12,7 @@ mpl.rcParams["axes.formatter.useoffset"] = False
 mpl.rcParams["axes.formatter.use_mathtext"] = False
 
 
-import os
+
 
 import sys
 import numpy as np
@@ -602,15 +605,22 @@ ax = fig.add_subplot(111)
 
 
 def plot_strategy(stints, y):
+    if not stints:
+        return
+
     for stint in stints:
+        if stint["length"] <= 0:
+            continue
+
         ax.barh(
-            y,
-            int(stint["length"]),
+            y=y,
+            width=int(stint["length"]),
             left=int(stint["start_lap"]),
             color=tyre_color(stint["compound"]),
             edgecolor="black",
             height=0.35
-)
+        )
+
 
 
 plot_strategy(stints_1, y=1)
