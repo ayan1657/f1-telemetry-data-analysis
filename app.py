@@ -466,6 +466,30 @@ if load_telemetry:
         dist, delta = compute_delta_time(car_1, car_2)
         sector_deltas = compute_sector_deltas(dist, delta)
 
+        # =========================
+        # 🔧 FIX: FORCE NUMERIC AXES (CRITICAL)
+        # =========================
+        dist = np.asarray(dist, dtype=float)
+        delta = np.asarray(delta, dtype=float)
+
+        car_1["Distance"] = np.asarray(car_1["Distance"], dtype=float)
+        car_2["Distance"] = np.asarray(car_2["Distance"], dtype=float)
+
+        car_1["Speed"] = np.asarray(car_1["Speed"], dtype=float)
+        car_2["Speed"] = np.asarray(car_2["Speed"], dtype=float)
+
+        car_1["Throttle"] = np.asarray(car_1["Throttle"], dtype=float)
+        car_2["Throttle"] = np.asarray(car_2["Throttle"], dtype=float)
+
+        pos_1["X"] = np.asarray(pos_1["X"], dtype=float)
+        pos_1["Y"] = np.asarray(pos_1["Y"], dtype=float)
+        pos_2["X"] = np.asarray(pos_2["X"], dtype=float)
+        pos_2["Y"] = np.asarray(pos_2["Y"], dtype=float)
+
+
+        
+
+
     except Exception as e:
      st.error(
         "Telemetry could not be loaded for this selection.\n\n"
@@ -769,8 +793,8 @@ fig, ax = plt.subplots(figsize=(7, 7))
 
 # --- Racing line (outlined for broadcast look) ---
 ax.plot(
-    pos_1["X"].to_numpy(),
-    pos_1["Y"].to_numpy(),
+    pos_1["X"],
+    pos_1["Y"],
     color="black",
     linewidth=4.5,
     alpha=0.85,
@@ -778,8 +802,8 @@ ax.plot(
 )
 
 ax.plot(
-    pos_1["X"].to_numpy(),
-    pos_1["Y"].to_numpy(),
+    pos_1["X"],
+    pos_1["Y"],
     color=color_1,
     linewidth=3,
     zorder=2,
@@ -787,14 +811,15 @@ ax.plot(
 )
 
 ax.plot(
-    pos_2["X"].to_numpy(),
-    pos_2["Y"].to_numpy(),
+    pos_2["X"],
+    pos_2["Y"],
     color=color_2,
     linestyle="--",
     linewidth=2.5,
     zorder=2,
     label=driver_2_name
 )
+
 
 
 # --- Corner markers ---
