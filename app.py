@@ -11,9 +11,6 @@ import matplotlib as mpl
 mpl.rcParams["axes.formatter.useoffset"] = False
 mpl.rcParams["axes.formatter.use_mathtext"] = False
 
-
-
-
 import sys
 import numpy as np
 import pandas as pd
