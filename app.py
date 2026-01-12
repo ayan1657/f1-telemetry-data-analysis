@@ -3,8 +3,11 @@
 # =========================
 import matplotlib
 matplotlib.use("Agg")
+
+import matplotlib.units as munits
+munits.registry.clear()
+
 import os
-os.environ["FASTF1_DISABLE_TIMING_PATCH"] = "1"
 
 import sys
 import numpy as np
@@ -590,7 +593,9 @@ st.info(
 )
 
 
-fig, ax = plt.subplots(figsize=(10, 3))
+fig = plt.figure(figsize=(10, 3))
+ax = fig.add_subplot(111)
+
 
 
 
