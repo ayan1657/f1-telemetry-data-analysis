@@ -1,126 +1,111 @@
-# 🏎️ Formula 1 Telemetry Analysis Dashboard
+🏎️ Formula 1 Telemetry & Performance Analysis Dashboard
 
-An interactive data analytics dashboard for exploring **Formula 1 telemetry data** using **Python, FastF1, and Streamlit**.  
-This project enables **corner-by-corner**, **lap-by-lap**, and **strategy-level** performance comparisons between F1 drivers.
+An interactive motorsport data analytics dashboard built using Python, FastF1, and Streamlit to analyze Formula 1 telemetry data.
 
----
+The project focuses on lap time performance, driver behavior, and race strategy insights, similar to tools used by performance engineers and race strategists.
 
-## 🚀 Project Overview
+🚀 Project Overview
 
-This application analyzes publicly available Formula 1 telemetry data to uncover **performance differences**, **driving styles**, and **race strategies**.
+This dashboard analyzes publicly available Formula 1 telemetry to identify where and why lap time is gained or lost.
 
-Users can:
-- Compare two drivers on selected laps
-- Visualize speed, throttle, braking, and delta time
-- Identify strongest sectors and critical corners
-- Analyze tyre compounds and race strategies
-- View automatically generated performance insights
+It enables:
 
-The dashboard is designed to feel **broadcast-grade**, **intuitive**, and **insight-driven**, making complex telemetry data accessible even to non-technical users.
+Direct performance comparison between drivers
 
----
+Visualization of lap-by-lap and corner-level deltas
 
-## 🧠 Key Capabilities
+Evaluation of tyre usage and stint strategies
 
-### 🔍 Telemetry Analysis
-- Speed vs Distance
-- Throttle vs Distance
-- Delta Time across the lap
-- Sector-wise performance comparison
-- Corner-by-corner delta impact
+Insight generation to support race strategy decisions
 
-### 🗺️ Track & Corner Analysis
-- Racing line overlay using GPS data
-- Automatic corner detection
-- Visual markers showing time gained or lost per corner
+The goal is to transform raw telemetry into actionable performance insights, not just visualizations.
 
-### 🛞 Tyre & Strategy Analysis
-- Fastest and slowest lap identification
-- Tyre compound detection per lap
-- Tyre strategy timeline (stint-based, in race order)
-- Tyre usage overview with lap ranges and stint lengths
-- Compound color coding (F1 broadcast style)
+❓ Key Questions This Project Answers
 
-### 🧠 Auto-Generated Insights
-- Overall lap winner
-- Strongest sector for the winning driver
-- Biggest corner time swing
-- Natural-language insights generated dynamically from telemetry data
+Where does one driver gain or lose lap time compared to another?
 
----
+How does tyre choice and stint length affect race pace?
 
-## 🧰 Tools & Technologies
+Which sectors and corners have the highest performance impact?
 
-- **Python 3.10**
-- **FastF1** (official open F1 telemetry API)
-- **Streamlit** (interactive dashboard)
-- **Pandas & NumPy** (data processing)
-- **Matplotlib** (visualization)
-- **Git & GitHub** (version control & deployment)
+How does qualifying pace translate into race performance?
 
----
+These questions mirror the analysis performed in real-world motorsport environments.
 
-## 🗂️ Project Structure
+🧠 Core Analytical Capabilities
+Telemetry & Lap Analysis
 
-f1-telemetry-data-analysis/
-│
-├── app.py # Main Streamlit dashboard
-├── requirements.txt # Python dependencies
-├── README.md # Project documentation
-├── src/
-│ ├── data_loader.py # Session & data loading logic
-│ ├── telemetry_utils.py# Telemetry extraction helpers
-│ └── delta_utils.py # Delta & sector calculations
-│
-├── notebooks/ # Exploratory analysis (development)
-└── .gitignore
+Speed, throttle, and braking comparison across laps
 
+Delta time visualization over lap distance
 
+Sector-wise performance breakdown
 
----
+Track & Corner-Level Analysis
 
-## 📊 Data Source & Limitations
+GPS-based racing line overlays
 
-- Telemetry data is sourced via **FastF1**, which uses publicly available broadcast data.
-- Some laps may have **missing or invalid tyre compound information** due to:
-  - Pit laps (in-laps / out-laps)
-  - Incomplete broadcast telemetry
-  - Data unavailability from the source
+Corner detection and time-loss visualization
 
-Such gaps are **handled gracefully** and clearly indicated in the dashboard to avoid user confusion.
+Identification of critical corners influencing lap time
 
----
+Tyre & Strategy Analysis
 
-## 🌐 Deployment
+Tyre compound detection and stint visualization
 
-The application is deployed on **Streamlit Cloud** and can be accessed directly via the browser.
+Strategy timeline showing compound usage and stint lengths
 
-> No local setup required for end users.
+Fastest and slowest lap identification per stint
 
----
+Automated Performance Insights
 
-## 🔮 Roadmap (Planned Enhancements)
+Lap winner identification
 
-- Qualifying vs Race mode comparison
-- Driver consistency metrics
-- Braking efficiency scoring
-- Exportable reports (PDF / images)
-- Public “Insight of the Day” feed for social media
-- Pro version with advanced analytics (future)
+Strongest sector detection
 
----
+Largest corner-level time delta
 
-## 👤 Author
+Natural-language insights generated from telemetry trends
 
-**Mohammed Ayan**  
-B.Tech CSE | Data Science & Analytics  
-Passionate about motorsport analytics, telemetry, and performance engineering.
+🧰 Tools & Technologies
 
----
+Python
 
-## ⚠️ Disclaimer
+FastF1 (public F1 telemetry data)
 
-This project is for **educational and analytical purposes only**.  
-It uses **non-proprietary, publicly accessible telemetry data** and is not affiliated with Formula 1, FIA, or any F1 team.
+Streamlit (interactive dashboards)
 
----
+Pandas & NumPy (data processing)
+
+Matplotlib (visualization)
+
+📊 Data Source & Analytical Limitations
+
+Telemetry is sourced from public broadcast data via FastF1
+
+High-frequency sensor data, fuel load, and car setup parameters are not available
+
+Pit in-laps and out-laps may contain incomplete tyre information
+
+These constraints reflect real-world scenarios where analysts must work with partial or imperfect data.
+
+🔮 Future Enhancements
+
+Predictive tyre degradation modeling
+
+Driver consistency metrics across race stints
+
+Qualifying vs race pace comparison
+
+Exportable performance reports
+
+👤 Author
+
+Mohammed Ayan
+B.Tech Computer Science (Data Science)
+Aspiring motorsport data & performance analyst
+
+⚠️ Disclaimer
+
+This project is for educational and analytical purposes only and uses non-proprietary public telemetry data.
+It is not affiliated with Formula 1, the FIA, or any Formula 1 team.
